@@ -1,5 +1,8 @@
-on: push
-name: Publish Website via FTP
+on: 
+  push:
+    branches:
+      - master
+name: Publish Real Website via FTP
 jobs:
   FTP-Deploy-Action:
     name: FTP-Deploy-Action
@@ -9,7 +12,27 @@ jobs:
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@2.0.0
       env:
-        FTP_SERVER: jasonaa.educationhost.com
+        FTP_SERVER: jasonaa.educationhost.cloud
         FTP_USERNAME: ieypzqhj
         FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
         ARGS: --delete
+
+
+on: 
+  pull_request:
+    branches:
+      - master
+name: Test FTP Deployment on PR Creation
+jobs:
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: FTP-Deploy-Action
+      uses: SamKirkland/FTP-Deploy-Action@2.0.0
+      env:
+        FTP_SERVER: jasonaa.educationhost.cloud
+        FTP_USERNAME: ieypzqhj
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        ARGS: --delete --dry-run
